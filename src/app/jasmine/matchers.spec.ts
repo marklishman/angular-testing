@@ -17,14 +17,14 @@ describe('Jasmine Matchers', () => {
 
   it('actual values should match truthy and falsy', () => {
 
-    expect(1 === 1).toBeTruthy();
-    expect(1 === 2).toBeFalsy();
+    expect(1).toBeTruthy();
+    expect(0).toBeFalsy();
 
   });
 
   it('not should negate the condition', () => {
 
-    expect(1 === 2).not.toBeTruthy();
+    expect( null).not.toBeTruthy();
 
   });
 

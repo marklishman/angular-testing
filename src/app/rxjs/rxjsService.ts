@@ -6,11 +6,11 @@ export class RxjsService {
 
   constructor(private dependency: Dependency) { }
 
-  getFirstObservable$(callFails = false): Observable<string> {
+  observableWithErrorsNotCaught$(callFails = false): Observable<string> {
     return this.dependency.getObservable$(callFails);
   }
 
-  getSecondObservable$(callFails = false): Observable<string> {
+  observableWithErrorsCaught$(callFails = false): Observable<string> {
     return this.dependency.getObservable$(callFails)
       .pipe(
         map( data => data),
