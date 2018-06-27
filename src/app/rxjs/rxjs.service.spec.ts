@@ -14,38 +14,38 @@ describe('RxjsService', () => {
     service = new RxjsService(dependency);
   });
 
-  it('should return "success" as data if okay', () => {
+  it('should return "ok" as data', () => {
     service.observableWithErrorsNotCaught$().subscribe(
-      (data) => expect(data).toBe('success'),
+      (data) => expect(data).toBe('ok'),
       () => fail('error not expected')
     );
   });
 
-  it('should return "failed" as an error if the call fails and the error has not been handled', () => {
+  it('should return "failed" as an error', () => {
     service.observableWithErrorsNotCaught$(true).subscribe(
       () => fail('error expected'),
       (error) => expect(error).toBe('failed')
     );
   });
 
-  it('should return "failed" as data if call fails and the error has been handled', () => {
+  it('should return "failed" as data', () => {
     service.observableWithErrorsCaught$(true).subscribe(
       (data) => expect(data).toBe('failed'),
       () => fail('error not expected')
     );
   });
 
-  it('should return "spy success" as data if okay and using a spy', () => {
+  it('should return "spy ok" as data', () => {
     const spy = createSpyObj('dependency', ['getObservable$']);
-    spy.getObservable$.and.returnValue(of('spy success'));
+    spy.getObservable$.and.returnValue(of('spy ok'));
     service = new RxjsService(spy);
     service.observableWithErrorsNotCaught$().subscribe(
-      (data) => expect(data).toBe('spy success'),
+      (data) => expect(data).toBe('spy ok'),
       () => fail('error not expected')
     );
   });
 
-  it('should return "spy error" as an error if the call fails and the error has not been handled', () => {
+  it('should return "spy error" as an error', () => {
     const spy = createSpyObj('dependency', ['getObservable$']);
     spy.getObservable$.and.returnValue(throwError('spy error'));
     service = new RxjsService(spy);
@@ -55,7 +55,7 @@ describe('RxjsService', () => {
     );
   });
 
-  it('synchronous observable should return the value immediately', () => {
+  it('should return the value immediately with a synchronous observable', () => {
     const spy = createSpyObj('dependency', ['getObservable$']);
     spy.getObservable$.and.returnValue(of('sync spy value'));
     service = new RxjsService(spy);
@@ -70,11 +70,11 @@ describe('RxjsService', () => {
     expect(result).toBe('sync spy value');
   });
 
-  it('asynchronous observable should not return the value immediately', () => {
+  it('should not return the value immediately with an asynchronous observable', () => {
     let result = null;
     service.observableWithErrorsNotCaught$().subscribe(
       (data) => {
-        expect(data).toBe('success');
+        expect(data).toBe('ok');
         result = data;
       },
       () => fail('error not expected')
@@ -82,17 +82,17 @@ describe('RxjsService', () => {
     expect(result).toBeNull();
   });
 
-  it('fakeAsync and tick should wait until asynchronous activities have finished', fakeAsync(() => {
+  it('should wait until asynchronous activities have finished with fakeAsync and tick', fakeAsync(() => {
     let result = null;
     service.observableWithErrorsNotCaught$().subscribe(
       (data) => {
-        expect(data).toBe('success');
+        expect(data).toBe('ok');
         result = data;
       },
       () => fail('error not expected')
     );
     tick();
-    expect(result).toBe('success');
+    expect(result).toBe('ok');
   }));
 
 });
