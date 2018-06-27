@@ -11,18 +11,31 @@ describe('RxjsService', () => {
     service = new RxjsService(dependency);
   });
 
-  it('observable should be successful', () => {
-    service.getObservable$().subscribe(
+  it('observable should succeed', () => {
+    service.getFirstObservable$().subscribe(
       (data) => expect(data).toBe('success'),
       () => fail('error not expected')
     );
   });
 
-
   it('observable should fail', () => {
-    service.getObservable$(true).subscribe(
+    service.getFirstObservable$(true).subscribe(
       () => fail('error expected'),
       (error) => expect(error).toBe('failed')
+    );
+  });
+
+  it('observable should return success', () => {
+    service.getSecondObservable$().subscribe(
+      (data) => expect(data).toBe('success'),
+      () => fail('error not expected')
+    );
+  });
+
+  it('observable should return failed', () => {
+    service.getSecondObservable$(true).subscribe(
+      (data) => expect(data).toBe('failed'),
+      () => fail('error not expected')
     );
   });
 

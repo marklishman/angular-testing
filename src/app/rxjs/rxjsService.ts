@@ -1,12 +1,21 @@
 import { Dependency } from './dependency';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 export class RxjsService {
 
   constructor(private dependency: Dependency) { }
 
-  getObservable$(callFails = false): Observable<string> {
+  getFirstObservable$(callFails = false): Observable<string> {
     return this.dependency.getObservable$(callFails);
+  }
+
+  getSecondObservable$(callFails = false): Observable<string> {
+    return this.dependency.getObservable$(callFails)
+      .pipe(
+        map( data => data),
+        catchError( error => of(error))
+      );
   }
 
 }
