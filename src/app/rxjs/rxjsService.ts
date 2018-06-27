@@ -17,5 +17,4 @@ export class RxjsService {
         catchError( error => of(error))
       );
   }
-
 }
