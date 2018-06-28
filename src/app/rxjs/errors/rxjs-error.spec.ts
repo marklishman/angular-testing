@@ -1,6 +1,6 @@
 import { RxjsErrors } from './rxjs-error';
 
-describe('RxjsErrors', () => {
+describe('RxjsSyncAsync', () => {
 
   let rxjsErrors;
 
