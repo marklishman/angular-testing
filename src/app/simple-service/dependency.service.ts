@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { defer, Observable, of, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,9 @@ export class DependencyService {
     return 'the dependency service';
   }
 
-  getName$(): Observable<string> {
-    return of(this.getName());
+  getObservable$(callFails: boolean): Observable<string> {
+    return callFails ?
+      throwError('failed') :
+      defer(() => Promise.resolve('ok'));
   }
 }

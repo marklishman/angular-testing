@@ -1,4 +1,3 @@
-import { fakeAsync, tick } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 
 import createSpyObj = jasmine.createSpyObj;
@@ -11,26 +10,8 @@ import { Dependency } from './dependency';
 
   testing-observables
 
-  Examples of testing synchronous and asynchronous observables, including error handling..
+  Examples of testing synchronous and asynchronous observables, including error handling.
 
-
-
-  fakeAsync & tick
-
-  it('should test something', fakeAsync(() => {
-      ...
-      tick(); // flush the microtasks queue
-      fixture.detectChanges();
-      // expect
-  }));
-
-  The `fakeAsync` function enables a linear coding style by running the test body in a special fakeAsync test zone.
-
-  Calling `tick()` simulates the passage of time until all pending asynchronous activities finish.
-
-  Use custom `asyncData` and `asyncError` functions using `defer(() => Promise.resolve(data))`. See Testing in angular.io for details.
-
-  Preferred.
  */
 
 describe('RxjsService', () => {
@@ -110,18 +91,5 @@ describe('RxjsService', () => {
     );
     expect(result).toBeNull();
   });
-
-  it('should wait until asynchronous activities have finished with fakeAsync and tick', fakeAsync(() => {
-    let result = null;
-    service.observableWithErrorsNotCaught$().subscribe(
-      (data) => {
-        expect(data).toBe('ok');
-        result = data;
-      },
-      () => fail('error not expected')
-    );
-    tick();
-    expect(result).toBe('ok');
-  }));
 
 });
