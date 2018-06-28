@@ -146,11 +146,4 @@ describe('MainService', () => {
     tick();
     expect(result).toBe('THE DEPENDENCY SERVICE');
   }));
-
-  // TODO TestBed (different spec file)
-
-  // TODO inject??
-  it('should be created', inject([MainService], (service: MainService) => {
-    expect(service).toBeTruthy();
-  }));
 });
