@@ -3,23 +3,19 @@ import { catchError, map } from 'rxjs/operators';
 
 export class RxjsService {
 
-  constructor() { }
-
-  observableWithErrorsNotCaught$(callFails = false): Observable<string> {
-    return this.observable$(callFails);
+  observableWithErrorsNotCaught$(): Observable<string> {
+    return this.observable$();
   }
 
-  observableWithErrorsCaught$(callFails = false): Observable<string> {
-    return this.observable$(callFails)
+  observableWithErrorsCaught$(): Observable<string> {
+    return this.observable$()
       .pipe(
         map( data => data),
         catchError( error => of(error))
       );
   }
 
-  private observable$(callFails: boolean): Observable<string> {
-    return callFails ?
-      throwError('failed') :
-      defer(() => Promise.resolve('ok'));
+  private observable$(): Observable<string> {
+    return defer(() => Promise.resolve('ok'));
   }
 }

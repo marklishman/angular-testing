@@ -2,7 +2,6 @@ import { of, throwError } from 'rxjs';
 
 import { RxjsService } from './rxjs.service';
 
-
 /*
 
   testing-observables
@@ -19,40 +18,34 @@ describe('RxjsService', () => {
     service = new RxjsService();
   });
 
-  it('should return "ok" as data', () => {
+  it('should return "ok" as data if successful', () => {
     service.observableWithErrorsNotCaught$().subscribe(
       (data) => expect(data).toBe('ok'),
       () => fail('error not expected')
     );
   });
 
-  it('should return "failed" as an error', () => {
-    service.observableWithErrorsNotCaught$(true).subscribe(
-      () => fail('error expected'),
-      (error) => expect(error).toBe('failed')
+  it('should return "success" as data when the observable$ method is replaces by a spy', () => {
+    spyOn<any>(service, 'observable$').and.returnValue(of('success'));
+    service.observableWithErrorsNotCaught$().subscribe(
+      (data) => expect(data).toBe('success'),
+      () => fail('error not expected')
     );
   });
 
-  it('should return "failed" as data', () => {
-    service.observableWithErrorsCaught$(true).subscribe(
+  it('should return "failed" as data if the error was handled', () => {
+    spyOn<any>(service, 'observable$').and.returnValue(throwError('failed'));
+    service.observableWithErrorsCaught$().subscribe(
       (data) => expect(data).toBe('failed'),
       () => fail('error not expected')
     );
   });
 
-  it('should return "spy ok" as data', () => {
-    spyOn<any>(service, 'observable$').and.returnValue(of('spy ok'));
-    service.observableWithErrorsNotCaught$().subscribe(
-      (data) => expect(data).toBe('spy ok'),
-      () => fail('error not expected')
-    );
-  });
-
-  it('should return "spy error" as an error', () => {
-    spyOn<any>(service, 'observable$').and.returnValue(throwError('spy error'));
+  it('should return "failed" as an error if the error is not handled', () => {
+    spyOn<any>(service, 'observable$').and.returnValue(throwError('failed'));
     service.observableWithErrorsNotCaught$().subscribe(
       () => fail('error expected'),
-      (error) => expect(error).toBe('spy error')
+      (error) => expect(error).toBe('failed')
     );
   });
 
