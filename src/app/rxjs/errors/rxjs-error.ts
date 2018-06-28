@@ -5,7 +5,7 @@ import { catchError } from 'rxjs/operators';
 
   rxjs-errors
 
-  Examples of raising and catching errors with RxJS.
+  Examples of raising and catching errors with RxJS in TypeScript.
 
   We have two examples of calling a method which returns an observable.
   The first method does not handle any errors and the the second one does.
