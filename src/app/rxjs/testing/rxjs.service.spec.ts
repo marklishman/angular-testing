@@ -1,9 +1,6 @@
 import { of, throwError } from 'rxjs';
 
-import createSpyObj = jasmine.createSpyObj;
-
 import { RxjsService } from './rxjs.service';
-import { Dependency } from './dependency';
 
 
 /*
@@ -17,11 +14,9 @@ import { Dependency } from './dependency';
 describe('RxjsService', () => {
 
   let service;
-  let dependency;
 
   beforeEach(() => {
-    dependency = new Dependency();
-    service = new RxjsService(dependency);
+    service = new RxjsService();
   });
 
   it('should return "ok" as data', () => {
@@ -46,9 +41,7 @@ describe('RxjsService', () => {
   });
 
   it('should return "spy ok" as data', () => {
-    const spy = createSpyObj('dependency', ['getObservable$']);
-    spy.getObservable$.and.returnValue(of('spy ok'));
-    service = new RxjsService(spy);
+    spyOn<any>(service, 'observable$').and.returnValue(of('spy ok'));
     service.observableWithErrorsNotCaught$().subscribe(
       (data) => expect(data).toBe('spy ok'),
       () => fail('error not expected')
@@ -56,9 +49,7 @@ describe('RxjsService', () => {
   });
 
   it('should return "spy error" as an error', () => {
-    const spy = createSpyObj('dependency', ['getObservable$']);
-    spy.getObservable$.and.returnValue(throwError('spy error'));
-    service = new RxjsService(spy);
+    spyOn<any>(service, 'observable$').and.returnValue(throwError('spy error'));
     service.observableWithErrorsNotCaught$().subscribe(
       () => fail('error expected'),
       (error) => expect(error).toBe('spy error')
@@ -66,9 +57,7 @@ describe('RxjsService', () => {
   });
 
   it('should return the value immediately with a synchronous observable', () => {
-    const spy = createSpyObj('dependency', ['getObservable$']);
-    spy.getObservable$.and.returnValue(of('sync spy value'));
-    service = new RxjsService(spy);
+    spyOn<any>(service, 'observable$').and.returnValue(of('sync spy value'));
     let result = null;
     service.observableWithErrorsNotCaught$().subscribe(
       (data) => {
