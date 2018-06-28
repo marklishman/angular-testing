@@ -1,13 +1,13 @@
-import { defer, Observable, of, throwError } from 'rxjs';
+import { defer, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 export class RxjsService {
 
-  observableWithErrorsNotCaught$(): Observable<string> {
+  observableWithErrorsNotHandled$(): Observable<string> {
     return this.observable$();
   }
 
-  observableWithErrorsCaught$(): Observable<string> {
+  observableWithErrorsHandled$(): Observable<string> {
     return this.observable$()
       .pipe(
         map( data => data),

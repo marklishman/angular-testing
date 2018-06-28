@@ -8,12 +8,11 @@ import { DependencyService } from './dependency.service';
 
 /*
 
-  testing-observables
+  angular-service-testing
 
-  Examples of testing synchronous and asynchronous observables, including error handling..
+  Examples of testing an angular service with dependencies.
 
-
-
+  ---
   fakeAsync & tick
 
   it('should test something', fakeAsync(() => {
@@ -42,24 +41,15 @@ describe('MainService', () => {
     mainService = new MainService(dependencyService);
   });
 
-  it('#name should be the real value', () => {
+  it('#name should return the real service name', () => {
     expect(mainService.getName()).toBe('the main service');
   });
 
-  it('#dependencyName should be the real value (synchronous)', () => {
+  it('#dependencyName should return the real dependency name', () => {
     expect(mainService.getDependencyName()).toBe('the dependency service');
   });
 
-  // it('#dependencyName$ should be the real name (asynchronous with done)', (done: DoneFn) => {
-  //   mainService.getDependencyName$()
-  //     .subscribe(name => {
-  //         expect(name).toBe('the dependency service');
-  //         done();
-  //       }
-  //     );
-  // });
-
-  it('#dependencyName should be a mock value', () => {
+  it('#dependencyName should return a mock value when a mock is used', () => {
     const mock = {
       getName: () => 'mock value',
     } as DependencyService;
@@ -67,78 +57,62 @@ describe('MainService', () => {
     expect(mainService.getDependencyName()).toBe('mock value');
   });
 
-  // it('#dependencyName$ should be a mock value (asynchronous with done)', (done: DoneFn) => {
-  //   const mock = {
-  //     getName$: () => of('mock value'),
-  //   } as DependencyService;
-  //   mainService = new MainService(mock);
-  //   mainService.getDependencyName$()
-  //     .subscribe(name => {
-  //         expect(name).toBe('mock value');
-  //         done();
-  //       }
-  //     );
-  // });
-
-  it('#dependencyName should be a spy value (using spyOn)', () => {
+  it('#dependencyName should return a spy value when a spy method is used (using spyOn)', () => {
     spyOn(dependencyService, 'getName').and.returnValue('spy value');
     expect(mainService.getDependencyName()).toBe('spy value');
   });
 
-  it('#dependencyName should be a spy value (using createSpyObj)', () => {
+  it('#dependencyName should return a spy value when a spy object is used (using createSpyObj)', () => {
     const spy = createSpyObj('dependencyService', ['getName']);
     spy.getName.and.returnValue('spy value');
     mainService = new MainService(spy);
     expect(mainService.getDependencyName()).toBe('spy value');
   });
 
-  it('should return "ok" as data', () => {
-    mainService.observableWithErrorsNotCaught$().subscribe(
-      (data) => expect(data).toBe('ok'),
-      () => fail('error not expected')
-    );
+  it('#observable should return the dependency name in upper case', () => {
+    mainService.observable$()
+      .subscribe(
+        name => expect(name).toBe('THE DEPENDENCY SERVICE'),
+        () => fail('error not expected')
+      );
   });
 
-  it('should return "failed" as an error', () => {
-    mainService.observableWithErrorsNotCaught$(true).subscribe(
-      () => fail('error expected'),
-      (error) => expect(error).toBe('failed')
-    );
+  it('#observable$ should return a mock value when a mock object is used', () => {
+    const mock = {
+      getUpperCaseName$: () => of('mock value'),
+    } as DependencyService;
+    mainService = new MainService(mock);
+    mainService.observable$()
+      .subscribe(
+        name => expect(name).toBe('mock value'),
+        () => fail('error not expected')
+      );
   });
 
-  it('should return "failed" as data', () => {
-    mainService.observableWithErrorsCaught$(true).subscribe(
-      (data) => expect(data).toBe('failed'),
-      () => fail('error not expected')
-    );
-  });
-
-  it('should return "spy ok" as data', () => {
-    const spy = createSpyObj('dependency', ['getObservable$']);
-    spy.getObservable$.and.returnValue(of('spy ok'));
+  it('#observable$ should return a spy value when a spy object is used', () => {
+    const spy = createSpyObj('dependency', ['getUpperCaseName$']);
+    spy.getUpperCaseName$.and.returnValue(of('spy ok'));
     mainService = new MainService(spy);
-    mainService.observableWithErrorsNotCaught$().subscribe(
+    mainService.observable$().subscribe(
       (data) => expect(data).toBe('spy ok'),
       () => fail('error not expected')
     );
   });
 
-  it('should return "spy error" as an error', () => {
-    const spy = createSpyObj('dependency', ['getObservable$']);
-    spy.getObservable$.and.returnValue(throwError('spy error'));
-    mainService = new MainService(spy);
-    mainService.observableWithErrorsNotCaught$().subscribe(
+  it('#observable$ should return an error when a spy method is used to throw an error', () => {
+    spyOn<any>(dependencyService, 'getUpperCaseName$').and.returnValue(throwError('failed'));
+    mainService.observable$().subscribe(
       () => fail('error expected'),
-      (error) => expect(error).toBe('spy error')
+      (error) => expect(error).toBe('failed')
     );
   });
 
   it('should return the value immediately with a synchronous observable', () => {
-    const spy = createSpyObj('dependency', ['getObservable$']);
-    spy.getObservable$.and.returnValue(of('sync spy value'));
+    const spy = createSpyObj('dependency', ['getUpperCaseName$']);
+    spy.getUpperCaseName$.and.returnValue(of('sync spy value'));
     mainService = new MainService(spy);
     let result = null;
-    mainService.observableWithErrorsNotCaught$().subscribe(
+    mainService.observable$().subscribe(
       (data) => {
         expect(data).toBe('sync spy value');
         result = data;
@@ -150,9 +124,9 @@ describe('MainService', () => {
 
   it('should not return the value immediately with an asynchronous observable', () => {
     let result = null;
-    mainService.observableWithErrorsNotCaught$().subscribe(
+    mainService.observable$().subscribe(
       (data) => {
-        expect(data).toBe('ok');
+        expect(data).toBe('THE DEPENDENCY SERVICE');
         result = data;
       },
       () => fail('error not expected')
@@ -162,15 +136,15 @@ describe('MainService', () => {
 
   it('should wait until asynchronous activities have finished with fakeAsync and tick', fakeAsync(() => {
     let result = null;
-    mainService.observableWithErrorsNotCaught$().subscribe(
+    mainService.observable$().subscribe(
       (data) => {
-        expect(data).toBe('ok');
+        expect(data).toBe('THE DEPENDENCY SERVICE');
         result = data;
       },
       () => fail('error not expected')
     );
     tick();
-    expect(result).toBe('ok');
+    expect(result).toBe('THE DEPENDENCY SERVICE');
   }));
 
   // TODO TestBed (different spec file)

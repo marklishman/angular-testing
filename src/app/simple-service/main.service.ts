@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+
 import { DependencyService } from './dependency.service';
 
 @Injectable({
@@ -18,15 +18,7 @@ export class MainService {
     return this.dependency.getName();
   }
 
-  observableWithErrorsNotCaught$(callFails = false): Observable<string> {
-    return this.dependency.getObservable$(callFails);
-  }
-
-  observableWithErrorsCaught$(callFails = false): Observable<string> {
-    return this.dependency.getObservable$(callFails)
-      .pipe(
-        map( data => data),
-        catchError( error => of(error))
-      );
+  observable$(): Observable<string> {
+    return this.dependency.getUpperCaseName$();
   }
 }

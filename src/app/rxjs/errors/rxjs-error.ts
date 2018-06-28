@@ -9,7 +9,7 @@ import { catchError } from 'rxjs/operators';
 
   We have two examples of calling a method which returns an observable.
   The first method does not handle any errors and the the second one does.
-  [highlight observableWithErrorsNotCaught$ and observableWithErrorsCaught$]
+  [highlight observableWithErrorsNotHandled$ and observableWithErrorsHandled$]
 
   When we call the two different methods several times we get these results.
   [highlight withErrorCallback and withoutErrorCallback]
@@ -21,7 +21,7 @@ import { catchError } from 'rxjs/operators';
 export class RxjsErrors {
 
   withErrorCallback(): void {
-    this.observableWithErrorsNotCaught$()
+    this.observableWithErrorsNotHandled$()
       .subscribe(
         (data) => console.log('data:', data),
         (error) => console.log('error:', error)
@@ -29,17 +29,17 @@ export class RxjsErrors {
   }
 
   withoutErrorCallback(): void {
-    this.observableWithErrorsCaught$()
+    this.observableWithErrorsHandled$()
       .subscribe(
         (data) => console.log('data or error:', data)
       );
   }
 
-  observableWithErrorsNotCaught$(): Observable<string> {
+  observableWithErrorsNotHandled$(): Observable<string> {
     return this.observable$();
   }
 
-  observableWithErrorsCaught$(): Observable<string> {
+  observableWithErrorsHandled$(): Observable<string> {
     return this.observable$()
       .pipe(
         catchError( error => of(error))

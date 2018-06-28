@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { defer, Observable, of, throwError } from 'rxjs';
+import { defer, Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,9 +10,8 @@ export class DependencyService {
     return 'the dependency service';
   }
 
-  getObservable$(callFails: boolean): Observable<string> {
-    return callFails ?
-      throwError('failed') :
-      defer(() => Promise.resolve('ok'));
+  getUpperCaseName$(): Observable<string> {
+    const upperCaseName = this.getName().toUpperCase();
+    return defer(() => Promise.resolve(upperCaseName));
   }
 }

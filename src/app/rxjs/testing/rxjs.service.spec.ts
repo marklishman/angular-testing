@@ -19,15 +19,15 @@ describe('RxjsService', () => {
   });
 
   it('should return "ok" as data if successful', () => {
-    service.observableWithErrorsNotCaught$().subscribe(
+    service.observableWithErrorsNotHandled$().subscribe(
       (data) => expect(data).toBe('ok'),
       () => fail('error not expected')
     );
   });
 
-  it('should return "success" as data when the observable$ method is replaces by a spy', () => {
+  it('should return "success" as data when the observable$ method is replaced by a spy', () => {
     spyOn<any>(service, 'observable$').and.returnValue(of('success'));
-    service.observableWithErrorsNotCaught$().subscribe(
+    service.observableWithErrorsNotHandled$().subscribe(
       (data) => expect(data).toBe('success'),
       () => fail('error not expected')
     );
@@ -35,7 +35,7 @@ describe('RxjsService', () => {
 
   it('should return "failed" as data if the error was handled', () => {
     spyOn<any>(service, 'observable$').and.returnValue(throwError('failed'));
-    service.observableWithErrorsCaught$().subscribe(
+    service.observableWithErrorsHandled$().subscribe(
       (data) => expect(data).toBe('failed'),
       () => fail('error not expected')
     );
@@ -43,7 +43,7 @@ describe('RxjsService', () => {
 
   it('should return "failed" as an error if the error is not handled', () => {
     spyOn<any>(service, 'observable$').and.returnValue(throwError('failed'));
-    service.observableWithErrorsNotCaught$().subscribe(
+    service.observableWithErrorsNotHandled$().subscribe(
       () => fail('error expected'),
       (error) => expect(error).toBe('failed')
     );
@@ -52,7 +52,7 @@ describe('RxjsService', () => {
   it('should return the value immediately with a synchronous observable', () => {
     spyOn<any>(service, 'observable$').and.returnValue(of('sync spy value'));
     let result = null;
-    service.observableWithErrorsNotCaught$().subscribe(
+    service.observableWithErrorsNotHandled$().subscribe(
       (data) => {
         expect(data).toBe('sync spy value');
         result = data;
@@ -64,7 +64,7 @@ describe('RxjsService', () => {
 
   it('should not return the value immediately with an asynchronous observable', () => {
     let result = null;
-    service.observableWithErrorsNotCaught$().subscribe(
+    service.observableWithErrorsNotHandled$().subscribe(
       (data) => {
         expect(data).toBe('ok');
         result = data;
