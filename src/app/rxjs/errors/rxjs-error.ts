@@ -1,24 +1,34 @@
-import { defer, Observable, of, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 /*
 
   rxjs-errors
 
-  Examples of raising and catching errors with RxJS
+  Examples of raising and catching errors with RxJS.
 
+  We have two examples of calling a method which returns an observable.
+  The first method does not handle any errors and the the second one does.
+  [highlight observableWithErrorsNotCaught$ and observableWithErrorsCaught$]
+
+  When we call the two different methods several times we get these results.
+  [highlight withErrorCallback and withoutErrorCallback]
+
+  [Show console output]
  */
 
 
 export class RxjsErrors {
 
-  main(): void {
+  withErrorCallback(): void {
     this.observableWithErrorsNotCaught$()
       .subscribe(
         (data) => console.log('data:', data),
         (error) => console.log('error:', error)
       );
+  }
 
+  withoutErrorCallback(): void {
     this.observableWithErrorsCaught$()
       .subscribe(
         (data) => console.log('data or error:', data)
