@@ -1,4 +1,4 @@
-import { of, throwError } from 'rxjs';
+import { defer, of, throwError } from 'rxjs';
 
 import { RxjsService } from './rxjs.service';
 
@@ -34,7 +34,10 @@ describe('RxjsService', () => {
   });
 
   it('should return "failed" as data if the error was handled', () => {
-    spyOn<any>(service, 'observable$').and.returnValue(throwError('failed'));
+    spyOn<any>(service, 'observable$')
+      .and.returnValue(
+        defer(() => Promise.reject('failed'))
+      );
     service.observableWithErrorsHandled$().subscribe(
       (data) => expect(data).toBe('failed'),
       () => fail('error not expected')
@@ -42,7 +45,10 @@ describe('RxjsService', () => {
   });
 
   it('should return "failed" as an error if the error is not handled', () => {
-    spyOn<any>(service, 'observable$').and.returnValue(throwError('failed'));
+    spyOn<any>(service, 'observable$')
+      .and.returnValue(
+      defer(() => Promise.reject('failed'))
+    );
     service.observableWithErrorsNotHandled$().subscribe(
       () => fail('error expected'),
       (error) => expect(error).toBe('failed')
