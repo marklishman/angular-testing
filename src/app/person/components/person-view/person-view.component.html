@@ -1,0 +1,11 @@
+<div *ngIf="person$ | async as person">
+  <p>
+    First Name: {{person.firstName}}
+  </p>
+  <p>
+    Last Name: {{person.lastName}}
+  </p>
+  <p>
+    Full Name: {{person.fullName}}
+  </p>
+</div>
