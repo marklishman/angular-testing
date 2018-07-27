@@ -1,9 +1,0 @@
-<a href="/persons/new">Add</a>
-<ul>
-  <li *ngFor="let person of persons$ | async">
-    <a [routerLink]="['/persons', person.id]">{{person.fullName}}</a> |
-    <a [routerLink]="['/persons', person.id, 'edit']">edit</a> |
-    <a href="javascript:void(0)" (click)="onDelete(person.id);">delete</a>
-  </li>
-</ul>
-
